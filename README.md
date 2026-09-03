@@ -270,7 +270,7 @@ Los resultados del perfilamiento permitieron establecer varias decisiones para l
 
 Aquí quiero que seamos particularmente claros, porque la **granularidad** es uno de los conceptos más importantes del modelo.
 
-```markdown
+
 ## 8. Definición de granularidad
 
 La granularidad de la tabla `Fact_Application` se define como:
