@@ -341,15 +341,12 @@ Dim_Technology    1 ─────── N Fact_Application
 Dim_Profile       1 ─────── N Fact_Application
 
 
-
-
 ---
 
 # 10. Description of Dimensions and Fact Table
 
 We now document each table in greater detail.
 
-```markdown
 ## 10. Description of Dimensions and Fact Table
 
 ### 10.1 Dim_Date
