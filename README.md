@@ -1,265 +1,265 @@
 # Recruitment Data Warehouse - ETL
 
-## 1. Objetivo del proyecto
+## 1. Project Objective
 
-El objetivo de este proyecto es diseñar e implementar un proceso ETL para transformar datos transaccionales de un proceso de reclutamiento tecnológico en un Data Warehouse dimensional orientado al análisis.
+The objective of this project is to design and implement an ETL process to transform transactional data from a technology recruitment process into a dimensional Data Warehouse oriented toward analysis.
 
-El proyecto comprende las etapas de extracción, preparación, transformación de reglas de negocio, modelado dimensional, carga en un Data Warehouse y análisis mediante consultas SQL y una herramienta de Business Intelligence.
+The project comprises the stages of extraction, preparation, business rule transformation, dimensional modeling, loading into a Data Warehouse, and analysis through SQL queries and a Business Intelligence tool.
 
-El Data Warehouse está diseñado para responder cinco requerimientos de negocio relacionados con tendencias de contratación, análisis por tecnología, perfil de los candidatos, efectividad de las evaluaciones técnicas y relación entre tecnologías, evaluaciones y contratación.
+The Data Warehouse is designed to address five business requirements related to hiring trends, technology analysis, candidate profiles, technical assessment effectiveness, and the relationship between technologies, assessments, and hiring.
 
-## 2. Contexto de negocio
+## 2. Business Context
 
-La organización del caso de estudio es una empresa dedicada al reclutamiento de profesionales del área tecnológica. La empresa recibe miles de aplicaciones de candidatos para diferentes perfiles y tecnologías.
+The organization in the case study is a company dedicated to recruiting professionals in the technology field. The company receives thousands of candidate applications for different profiles and technologies.
 
-Cada aplicación contiene información sobre el candidato, la fecha de aplicación, el país, los años de experiencia, el nivel de seniority, la tecnología asociada y los resultados obtenidos en dos evaluaciones técnicas:
+Each application contains information about the candidate, the application date, country, years of experience, seniority level, associated technology, and the results obtained in two technical assessments:
 
 - Code Challenge Score
 - Technical Interview Score
 
-La organización necesita transformar estos datos operacionales en información analítica que permita identificar patrones de contratación y apoyar la toma de decisiones.
+The organization needs to transform this operational data into analytical information that allows it to identify hiring patterns and support decision-making.
 
-Para determinar si una aplicación resulta en una contratación se utiliza la siguiente regla de negocio:
+To determine whether an application results in a hire, the following business rule is used:
 
 HIRED = Code Challenge Score >= 7 AND Technical Interview Score >= 7
 
-Por lo tanto, un candidato es considerado contratado únicamente cuando obtiene una puntuación de al menos 7 en ambas evaluaciones.
+Therefore, a candidate is considered hired only when they obtain a score of at least 7 in both assessments.
 
 
-## 3. Requerimientos de negocio
+## 3. Business Requirements
 
 ### R1 - Hiring Trends
 
-Analizar las tendencias de contratación a lo largo del tiempo para estudiar cómo evoluciona el comportamiento de las aplicaciones y contrataciones entre diferentes períodos.
+Analyze hiring trends over time to study how application and hiring behavior evolves across different periods.
 
-**Pregunta de negocio:**
+**Business Question:**
 
-¿Cómo ha evolucionado el volumen de aplicaciones y la cantidad de candidatos contratados a lo largo del tiempo?
+How has the volume of applications and the number of hired candidates evolved over time?
 
 ---
 
 ### R2 - Technology Analysis
 
-Comparar los resultados de contratación entre las diferentes tecnologías para identificar cuáles generan el mayor número y proporción de candidatos contratados.
+Compare hiring results across different technologies to identify which ones generate the highest number and proportion of hired candidates.
 
-**Pregunta de negocio:**
+**Business Question:**
 
-¿Qué tecnologías presentan la mayor cantidad y proporción de candidatos contratados?
+Which technologies have the highest number and proportion of hired candidates?
 
 ---
 
 ### R3 - Candidate Profile Analysis
 
-Analizar los resultados de contratación de acuerdo con el nivel de seniority y los años de experiencia profesional de los candidatos.
+Analyze hiring results according to the candidates' seniority level and years of professional experience.
 
-**Pregunta de negocio:**
+**Business Question:**
 
-¿Cómo varía el resultado de contratación según el nivel de seniority y los años de experiencia profesional?
+How does the hiring outcome vary according to seniority level and years of professional experience?
 
 ---
 
 ### R4 - Technical Assessment Effectiveness
 
-Evaluar la efectividad descriptiva de las dos evaluaciones técnicas mediante la comparación de sus resultados entre candidatos contratados y no contratados.
+Evaluate the descriptive effectiveness of the two technical assessments by comparing their results between hired and non-hired candidates.
 
-**Pregunta de negocio:**
+**Business Question:**
 
-¿Cuál de las evaluaciones técnicas presenta una mayor diferencia entre candidatos contratados y no contratados?
+Which technical assessment presents a greater difference between hired and non-hired candidates?
 
 ---
 
 ### R5 - Technology-Assessment Analysis
 
-Analizar el desempeño de las evaluaciones técnicas entre las diferentes tecnologías y estudiar su relación descriptiva con los resultados de contratación.
+Analyze the performance of technical assessments across different technologies and study their descriptive relationship with hiring outcomes.
 
-**Pregunta de negocio:**
+**Business Question:**
 
-¿Cómo varía el desempeño en las evaluaciones técnicas entre tecnologías y cómo se relaciona con la contratación?
+How does technical assessment performance vary across technologies, and how is it related to hiring?
 
 
-## 4. Trazabilidad de requerimientos
+## 4. Requirements Traceability
 
-La siguiente matriz relaciona cada requerimiento de negocio con las tablas del Data Warehouse, las principales métricas utilizadas y el análisis realizado.
+The following matrix relates each business requirement to the Data Warehouse tables, the main metrics used, and the analysis performed.
 
-| Requerimiento | Tablas DW utilizadas | Principales KPIs / métricas | Visualización / análisis |
+| Requirement | DW Tables Used | Main KPIs / Metrics | Visualization / Analysis |
 |---|---|---|---|
-| R1 - Hiring Trends | Fact_Application, Dim_Date | Total Applications, Hired Candidates, Hiring Rate | Tendencia de aplicaciones y contrataciones por año |
-| R2 - Technology Analysis | Fact_Application, Dim_Technology | Hired Candidates, Total Applications, Hiring Rate | Comparación de contratación por tecnología |
-| R3 - Candidate Profile Analysis | Fact_Application, Dim_Profile | Hiring Rate, Average YOE, Hired Candidates | Comparación por seniority y rangos de experiencia |
-| R4 - Technical Assessment Effectiveness | Fact_Application | Average Code Challenge Score, Average Technical Interview Score, Score Difference | Comparación de evaluaciones entre HIRED y NOT HIRED |
-| R5 - Technology-Assessment Analysis | Fact_Application, Dim_Technology | Average Code Challenge Score, Average Technical Interview Score, Hiring Rate | Comparación de desempeño técnico y contratación por tecnología |
+| R1 - Hiring Trends | Fact_Application, Dim_Date | Total Applications, Hired Candidates, Hiring Rate | Application and hiring trends by year |
+| R2 - Technology Analysis | Fact_Application, Dim_Technology | Hired Candidates, Total Applications, Hiring Rate | Hiring comparison by technology |
+| R3 - Candidate Profile Analysis | Fact_Application, Dim_Profile | Hiring Rate, Average YOE, Hired Candidates | Comparison by seniority and experience ranges |
+| R4 - Technical Assessment Effectiveness | Fact_Application | Average Code Challenge Score, Average Technical Interview Score, Score Difference | Comparison of assessments between HIRED and NOT HIRED |
+| R5 - Technology-Assessment Analysis | Fact_Application, Dim_Technology | Average Code Challenge Score, Average Technical Interview Score, Hiring Rate | Comparison of technical performance and hiring by technology |
 
-Cada requerimiento se encuentra respaldado por atributos y métricas existentes en el Data Warehouse. No se incorporaron dimensiones o atributos únicamente por disponibilidad en el dataset; los elementos del modelo fueron seleccionados de acuerdo con su utilidad analítica.
+Each requirement is supported by attributes and metrics available in the Data Warehouse. No dimensions or attributes were incorporated solely because they were available in the dataset; the elements of the model were selected according to their analytical usefulness.
 
 
-## 5. Descripción del dataset
+## 5. Dataset Description
 
-El dataset de entrada corresponde al archivo `candidates.csv`, ubicado en:
+The input dataset corresponds to the `candidates.csv` file, located at:
 
 `data/raw/candidates.csv`
 
-El archivo contiene información transaccional relacionada con aplicaciones de candidatos a procesos de reclutamiento tecnológico.
+The file contains transactional information related to candidate applications to technology recruitment processes.
 
-El archivo utiliza `;` como separador y contiene 50.000 registros y 10 columnas originales:
+The file uses `;` as the separator and contains 50,000 records and 10 original columns:
 
-| Campo | Descripción |
+| Field | Description |
 |---|---|
-| First Name | Nombre del candidato |
-| Last Name | Apellido del candidato |
-| Email | Correo electrónico registrado en la aplicación |
-| Application Date | Fecha en la que se realizó la aplicación |
-| Country | País asociado a la aplicación |
-| YOE | Years of Experience; años de experiencia profesional |
-| Seniority | Nivel profesional del candidato |
-| Technology | Tecnología o perfil tecnológico asociado a la aplicación |
-| Code Challenge Score | Puntuación obtenida en el Code Challenge, en una escala de 0 a 10 |
-| Technical Interview Score | Puntuación obtenida en la entrevista técnica, en una escala de 0 a 10 |
+| First Name | Candidate's first name |
+| Last Name | Candidate's last name |
+| Email | Email address registered in the application |
+| Application Date | Date on which the application was submitted |
+| Country | Country associated with the application |
+| YOE | Years of Experience; years of professional experience |
+| Seniority | Candidate's professional level |
+| Technology | Technology or technical profile associated with the application |
+| Code Challenge Score | Score obtained in the Code Challenge, on a scale from 0 to 10 |
+| Technical Interview Score | Score obtained in the Technical Interview, on a scale from 0 to 10 |
 
-### Alcance temporal
+### Temporal Scope
 
-Las fechas de aplicación se encuentran entre:
+Application dates range from:
 
-- Fecha mínima: `2018-01-01`
-- Fecha máxima: `2022-07-04`
+- Minimum date: `2018-01-01`
+- Maximum date: `2022-07-04`
 
-Por lo tanto, el año 2022 representa un período parcial y no debe compararse directamente con los años completos anteriores en términos de volumen anual.
+Therefore, the year 2022 represents a partial period and should not be directly compared with the previous full years in terms of annual volume.
 
-### Características de los datos
+### Data Characteristics
 
-El dataset representa aplicaciones individuales y no necesariamente candidatos únicos. Durante el perfilamiento se identificaron 49.833 correos electrónicos únicos para 50.000 registros, lo que indica la existencia de candidatos con múltiples aplicaciones según el campo Email.
+The dataset represents individual applications and not necessarily unique candidates. During profiling, 49,833 unique email addresses were identified across 50,000 records, indicating the existence of candidates with multiple applications according to the Email field.
 
-Debido a que el correo electrónico presenta inconsistencias en algunos registros y no constituye un identificador confiable del candidato, no se utilizó como clave en el modelo dimensional.
+Because the email address presents inconsistencies in some records and does not constitute a reliable candidate identifier, it was not used as a key in the dimensional model.
 
-El dataset se conserva sin modificaciones en `data/raw/` como fuente original del proceso ETL.
+The dataset is preserved without modifications in `data/raw/` as the original source of the ETL process.
 
 
 
-## 6. Hallazgos principales del perfilamiento
+## 6. Main Profiling Findings
 
-Antes de realizar las transformaciones de negocio y la construcción del modelo dimensional se realizó un proceso de perfilamiento sobre el dataset original.
+Before performing the business transformations and constructing the dimensional model, a profiling process was performed on the original dataset.
 
-Los principales resultados fueron los siguientes:
+The main results were as follows:
 
-| Aspecto | Resultado |
+| Aspect | Result |
 |---|---:|
-| Registros | 50.000 |
-| Columnas originales | 10 |
-| Emails únicos | 49.833 |
-| Registros con múltiples aplicaciones | 165 candidatos identificados mediante Email |
-| Duplicados exactos | 0 |
-| Valores faltantes | 0 |
-| Fecha mínima de aplicación | 2018-01-01 |
-| Fecha máxima de aplicación | 2022-07-04 |
-| Rango Code Challenge Score | 0–10 |
-| Rango Technical Interview Score | 0–10 |
-| Rango YOE | 0–30 años |
-| HIRED | 6.698 |
-| NOT HIRED | 43.302 |
+| Records | 50,000 |
+| Original columns | 10 |
+| Unique emails | 49,833 |
+| Records with multiple applications | 165 candidates identified through Email |
+| Exact duplicates | 0 |
+| Missing values | 0 |
+| Minimum application date | 2018-01-01 |
+| Maximum application date | 2022-07-04 |
+| Code Challenge Score range | 0–10 |
+| Technical Interview Score range | 0–10 |
+| YOE range | 0–30 years |
+| HIRED | 6,698 |
+| NOT HIRED | 43,302 |
 
-### Calidad de los datos
+### Data Quality
 
-No se encontraron valores faltantes en las columnas del dataset original y tampoco se identificaron registros completamente duplicados.
+No missing values were found in the columns of the original dataset, and no completely duplicated records were identified.
 
-Las fechas, años de experiencia y puntuaciones fueron convertidos a tipos de datos apropiados durante la etapa de preparación.
+Dates, years of experience, and scores were converted to appropriate data types during the preparation stage.
 
-Las variables categóricas `Seniority` y `Technology` fueron estandarizadas mediante eliminación de espacios innecesarios.
+The categorical variables `Seniority` and `Technology` were standardized by removing unnecessary spaces.
 
-### Aplicaciones múltiples
+### Multiple Applications
 
-El perfilamiento mostró que existen registros asociados al mismo Email en diferentes aplicaciones. Por esta razón, estas filas no fueron eliminadas como duplicados.
+The profiling showed that there are records associated with the same Email across different applications. For this reason, these rows were not removed as duplicates.
 
-El análisis del contenido mostró además que algunos correos electrónicos aparecen asociados a diferentes nombres y características de candidatos. Esto indica que el campo Email no puede considerarse un identificador confiable dentro de este dataset.
+The analysis of the data also showed that some email addresses are associated with different candidate names and characteristics. This indicates that the Email field cannot be considered a reliable identifier within this dataset.
 
-En consecuencia, se decidió modelar cada registro como una aplicación independiente y no construir una dimensión de candidato basada en Email.
+Consequently, it was decided to model each record as an independent application and not to build a candidate dimension based on Email.
 
-### Regla de contratación
+### Hiring Rule
 
-A partir de la regla de negocio:
+Based on the business rule:
 
 `HIRED = Code Challenge Score >= 7 AND Technical Interview Score >= 7`
 
-se obtuvo la siguiente distribución:
+the following distribution was obtained:
 
-- HIRED: 6.698 aplicaciones
-- NOT HIRED: 43.302 aplicaciones
-- Total: 50.000 aplicaciones
+- HIRED: 6,698 applications
+- NOT HIRED: 43,302 applications
+- Total: 50,000 applications
 
-Por lo tanto, aproximadamente el 13,40% de las aplicaciones cumplen simultáneamente con los criterios establecidos para contratación.
+Therefore, approximately 13.40% of applications simultaneously meet the established hiring criteria.
 
-### Decisiones derivadas del perfilamiento
+### Decisions Derived from Profiling
 
-Los resultados del perfilamiento permitieron establecer varias decisiones para las siguientes etapas del proyecto:
+The profiling results allowed several decisions to be established for the following stages of the project:
 
-1. Mantener las 50.000 aplicaciones como eventos independientes.
-2. No eliminar las aplicaciones múltiples como si fueran duplicados.
-3. No utilizar Email como clave del modelo dimensional.
-4. Conservar los registros HIRED y NOT HIRED, ya que ambos son necesarios para los análisis de efectividad de las evaluaciones técnicas.
-5. Convertir fechas, años de experiencia y puntuaciones a tipos numéricos o temporales apropiados.
-6. Estandarizar las variables categóricas antes de construir las dimensiones.
+1. Keep the 50,000 applications as independent events.
+2. Do not remove multiple applications as if they were duplicates.
+3. Do not use Email as a key in the dimensional model.
+4. Keep both HIRED and NOT HIRED records, since both are necessary for the technical assessment effectiveness analyses.
+5. Convert dates, years of experience, and scores to appropriate numeric or temporal data types.
+6. Standardize categorical variables before building the dimensions.
 
 
-## 6. Hallazgos principales del perfilamiento
+## 6. Main Profiling Findings
 
-Antes de realizar las transformaciones de negocio y la construcción del modelo dimensional se realizó un proceso de perfilamiento sobre el dataset original.
+Before performing the business transformations and constructing the dimensional model, a profiling process was performed on the original dataset.
 
-Los principales resultados fueron los siguientes:
+The main results were as follows:
 
-| Aspecto | Resultado |
+| Aspect | Result |
 |---|---:|
-| Registros | 50.000 |
-| Columnas originales | 10 |
-| Emails únicos | 49.833 |
-| Registros con múltiples aplicaciones | 165 candidatos identificados mediante Email |
-| Duplicados exactos | 0 |
-| Valores faltantes | 0 |
-| Fecha mínima de aplicación | 2018-01-01 |
-| Fecha máxima de aplicación | 2022-07-04 |
-| Rango Code Challenge Score | 0–10 |
-| Rango Technical Interview Score | 0–10 |
-| Rango YOE | 0–30 años |
-| HIRED | 6.698 |
-| NOT HIRED | 43.302 |
+| Records | 50,000 |
+| Original columns | 10 |
+| Unique emails | 49,833 |
+| Records with multiple applications | 165 candidates identified through Email |
+| Exact duplicates | 0 |
+| Missing values | 0 |
+| Minimum application date | 2018-01-01 |
+| Maximum application date | 2022-07-04 |
+| Code Challenge Score range | 0–10 |
+| Technical Interview Score range | 0–10 |
+| YOE range | 0–30 years |
+| HIRED | 6,698 |
+| NOT HIRED | 43,302 |
 
-### Calidad de los datos
+### Data Quality
 
-No se encontraron valores faltantes en las columnas del dataset original y tampoco se identificaron registros completamente duplicados.
+No missing values were found in the columns of the original dataset, and no completely duplicated records were identified.
 
-Las fechas, años de experiencia y puntuaciones fueron convertidos a tipos de datos apropiados durante la etapa de preparación.
+Dates, years of experience, and scores were converted to appropriate data types during the preparation stage.
 
-Las variables categóricas `Seniority` y `Technology` fueron estandarizadas mediante eliminación de espacios innecesarios.
+The categorical variables `Seniority` and `Technology` were standardized by removing unnecessary spaces.
 
-### Aplicaciones múltiples
+### Multiple Applications
 
-El perfilamiento mostró que existen registros asociados al mismo Email en diferentes aplicaciones. Por esta razón, estas filas no fueron eliminadas como duplicados.
+The profiling showed that there are records associated with the same Email across different applications. For this reason, these rows were not removed as duplicates.
 
-El análisis del contenido mostró además que algunos correos electrónicos aparecen asociados a diferentes nombres y características de candidatos. Esto indica que el campo Email no puede considerarse un identificador confiable dentro de este dataset.
+The analysis of the data also showed that some email addresses are associated with different candidate names and characteristics. This indicates that the Email field cannot be considered a reliable identifier within this dataset.
 
-En consecuencia, se decidió modelar cada registro como una aplicación independiente y no construir una dimensión de candidato basada en Email.
+Consequently, it was decided to model each record as an independent application and not to build a candidate dimension based on Email.
 
-### Regla de contratación
+### Hiring Rule
 
-A partir de la regla de negocio:
+Based on the business rule:
 
 `HIRED = Code Challenge Score >= 7 AND Technical Interview Score >= 7`
 
-se obtuvo la siguiente distribución:
+the following distribution was obtained:
 
-- HIRED: 6.698 aplicaciones
-- NOT HIRED: 43.302 aplicaciones
-- Total: 50.000 aplicaciones
+- HIRED: 6,698 applications
+- NOT HIRED: 43,302 applications
+- Total: 50,000 applications
 
-Por lo tanto, aproximadamente el 13,40% de las aplicaciones cumplen simultáneamente con los criterios establecidos para contratación.
+Therefore, approximately 13.40% of applications simultaneously meet the established hiring criteria.
 
-### Decisiones derivadas del perfilamiento
+### Decisions Derived from Profiling
 
-Los resultados del perfilamiento permitieron establecer varias decisiones para las siguientes etapas del proyecto:
+The profiling results allowed several decisions to be established for the following stages of the project:
 
-1. Mantener las 50.000 aplicaciones como eventos independientes.
-2. No eliminar las aplicaciones múltiples como si fueran duplicados.
-3. No utilizar Email como clave del modelo dimensional.
-4. Conservar los registros HIRED y NOT HIRED, ya que ambos son necesarios para los análisis de efectividad de las evaluaciones técnicas.
-5. Convertir fechas, años de experiencia y puntuaciones a tipos numéricos o temporales apropiados.
-6. Estandarizar las variables categóricas antes de construir las dimensiones.
+1. Keep the 50,000 applications as independent events.
+2. Do not remove multiple applications as if they were duplicates.
+3. Do not use Email as a key in the dimensional model.
+4. Keep both HIRED and NOT HIRED records, since both are necessary for the technical assessment effectiveness analyses.
+5. Convert dates, years of experience, and scores to appropriate numeric or temporal data types.
+6. Standardize categorical variables before building the dimensions.
 
 
 
@@ -268,73 +268,72 @@ Los resultados del perfilamiento permitieron establecer varias decisiones para l
 
 # 8. Grain Definition
 
-Aquí quiero que seamos particularmente claros, porque la **granularidad** es uno de los conceptos más importantes del modelo.
+Here we want to be particularly clear, because **granularity** is one of the most important concepts in the model.
 
 
-## 8. Definición de granularidad
+## Grain Definition
 
-La granularidad de la tabla `Fact_Application` se define como:
+The granularity of the `Fact_Application` table is defined as:
 
-> **Una fila de `Fact_Application` representa una aplicación individual realizada por un candidato al proceso de reclutamiento.**
+> **One row in `Fact_Application` represents one individual application submitted by a candidate to the recruitment process.**
 
-Por lo tanto, cada registro de la tabla de hechos corresponde a un evento de aplicación y conserva la información necesaria para analizar el resultado de dicho evento.
+Therefore, each record in the fact table corresponds to an application event and retains the information necessary to analyze the outcome of that event.
 
-La granularidad seleccionada permite analizar:
+The selected grain allows the following analyses:
 
-- Cantidad de aplicaciones.
-- Cantidad de aplicaciones contratadas y no contratadas.
-- Tasas de contratación.
-- Puntuaciones promedio de las evaluaciones técnicas.
-- Resultados de contratación por fecha.
-- Resultados de contratación por tecnología.
-- Resultados de contratación por seniority.
-- Resultados de contratación por rangos de años de experiencia.
+- Number of applications.
+- Number of hired and non-hired applications.
+- Hiring rates.
+- Average technical assessment scores.
+- Hiring outcomes by date.
+- Hiring outcomes by technology.
+- Hiring outcomes by seniority.
+- Hiring outcomes by years-of-experience ranges.
 
-### Implicaciones de la granularidad
+### Grain Implications
 
-Las aplicaciones múltiples de un mismo candidato no se consideran duplicados automáticamente. Cada aplicación representa un evento independiente dentro del proceso de negocio y, por lo tanto, se conserva como una fila diferente en `Fact_Application`.
+Multiple applications from the same candidate are not automatically considered duplicates. Each application represents an independent event within the business process and is therefore preserved as a different row in `Fact_Application`.
 
-El campo `Email` no se utiliza como identificador del candidato ni como clave de la tabla de hechos, debido a las inconsistencias detectadas durante el perfilamiento.
+The `Email` field is not used as a candidate identifier or as the key of the fact table, due to the inconsistencies detected during profiling.
 
-La tabla de hechos utiliza `Application_Key` como clave sustituta para identificar cada registro de aplicación dentro del Data Warehouse.
+The fact table uses `Application_Key` as a surrogate key to identify each application record within the Data Warehouse.
 
-### Relación entre granularidad y requerimientos
+### Relationship Between Grain and Requirements
 
-La granularidad seleccionada permite satisfacer los cinco requerimientos de negocio:
+The selected grain allows all five business requirements to be satisfied:
 
-| Requerimiento | Información soportada por la granularidad |
+| Requirement | Information Supported by the Grain |
 |---|---|
-| R1 - Hiring Trends | Fecha y resultado de cada aplicación |
-| R2 - Technology Analysis | Tecnología y resultado de cada aplicación |
-| R3 - Candidate Profile Analysis | Seniority, YOE y resultado |
-| R4 - Technical Assessment Effectiveness | Puntuaciones de ambas evaluaciones y resultado |
-| R5 - Technology-Assessment Analysis | Tecnología, puntuaciones y resultado |
+| R1 - Hiring Trends | Date and outcome of each application |
+| R2 - Technology Analysis | Technology and outcome of each application |
+| R3 - Candidate Profile Analysis | Seniority, YOE, and outcome |
+| R4 - Technical Assessment Effectiveness | Scores from both assessments and outcome |
+| R5 - Technology-Assessment Analysis | Technology, scores, and outcome |
 
-La elección de esta granularidad permite conservar el nivel de detalle necesario para realizar los análisis sin perder información durante la transformación hacia el modelo dimensional.
+The selected grain preserves the level of detail required to perform the analyses without losing information during the transformation into the dimensional model.
 
 ---
 
-## 9. Modelo dimensional - Star Schema
+## 9. Dimensional Model - Star Schema
 
-El Data Warehouse se implementó mediante un **modelo dimensional tipo Star Schema**. 
-La tabla de hechos `Fact_Application` se encuentra en el centro del modelo y contiene 
-los eventos de aplicación, mientras que las dimensiones proporcionan el contexto 
-necesario para realizar los diferentes análisis.
+The Data Warehouse was implemented using a **Star Schema dimensional model**. 
+The `Fact_Application` fact table is located at the center of the model and contains 
+the application events, while the dimensions provide the necessary context for the different analyses.
 
-### Diagrama del modelo
+### Model Diagram
 
-![Star Schema del Data Warehouse](diagrams/star_schema.png)
+![Data Warehouse Star Schema](diagrams/star_schema.png)
 
-### Estructura del modelo
+### Model Structure
 
-El modelo está compuesto por una tabla de hechos y tres dimensiones:
+The model consists of one fact table and three dimensions:
 
-- `Fact_Application`: almacena los eventos de aplicación y sus valores analíticos.
-- `Dim_Date`: proporciona el contexto temporal.
-- `Dim_Technology`: proporciona el contexto relacionado con la tecnología.
-- `Dim_Profile`: proporciona el contexto relacionado con el nivel de seniority.
+- `Fact_Application`: stores application events and their analytical values.
+- `Dim_Date`: provides temporal context.
+- `Dim_Technology`: provides context related to technology.
+- `Dim_Profile`: provides context related to seniority level.
 
-Las relaciones del modelo son:
+The relationships in the model are:
 
 ```text
 Dim_Date          1 ─────── N Fact_Application
@@ -346,117 +345,101 @@ Dim_Profile       1 ─────── N Fact_Application
 
 ---
 
-# 10. Descripción de dimensiones y tabla de hechos
+# 10. Description of Dimensions and Fact Table
 
-Ahora documentamos cada tabla con más detalle.
+We now document each table in greater detail.
 
 ```markdown
-## 10. Descripción de dimensiones y tabla de hechos
+## 10. Description of Dimensions and Fact Table
 
 ### 10.1 Dim_Date
 
-La dimensión `Dim_Date` contiene la información temporal asociada a cada fecha de 
-aplicación.
+The `Dim_Date` dimension contains the temporal information associated with each application date.
 
-Su objetivo es facilitar el análisis de las aplicaciones y contrataciones a través 
-del tiempo sin tener que realizar transformaciones sobre la fecha almacenada en la 
-tabla de hechos.
+Its purpose is to facilitate the analysis of applications and hiring over time without having to perform transformations on the date stored in the fact table.
 
-| Campo | Tipo | Clave | Descripción |
+| Field | Type | Key | Description |
 |---|---|---|---|
-| `Date_Key` | INT | PK | Clave sustituta de la fecha. |
-| `Application_Date` | DATE | - | Fecha en la que se realizó la aplicación. |
-| `Day` | INT | - | Día correspondiente a la fecha. |
-| `Month` | INT | - | Mes correspondiente a la fecha. |
-| `Quarter` | INT | - | Trimestre correspondiente a la fecha. |
-| `Year` | INT | - | Año correspondiente a la fecha. |
+| `Date_Key` | INT | PK | Surrogate key for the date. |
+| `Application_Date` | DATE | - | Date on which the application was submitted. |
+| `Day` | INT | - | Day corresponding to the date. |
+| `Month` | INT | - | Month corresponding to the date. |
+| `Quarter` | INT | - | Quarter corresponding to the date. |
+| `Year` | INT | - | Year corresponding to the date. |
 
-La dimensión se construye a partir de las fechas únicas presentes en las 
-aplicaciones. Para cada fecha se genera una **surrogate key** (`Date_Key`).
+The dimension is built from the unique dates present in the applications. A **surrogate key** (`Date_Key`) is generated for each date.
 
-Esta dimensión permite responder principalmente al requerimiento **R1 - Hiring 
-Trends**.
+This dimension primarily supports requirement **R1 - Hiring Trends**.
 
 ---
 
 ### 10.2 Dim_Technology
 
-La dimensión `Dim_Technology` contiene las tecnologías asociadas a las aplicaciones.
+The `Dim_Technology` dimension contains the technologies associated with the applications.
 
-Su objetivo es permitir el análisis y comparación de los resultados de contratación 
-entre diferentes tecnologías.
+Its purpose is to enable the analysis and comparison of hiring outcomes across different technologies.
 
-| Campo | Tipo | Clave | Descripción |
+| Field | Type | Key | Description |
 |---|---|---|---|
-| `Technology_Key` | INT | PK | Clave sustituta de la tecnología. |
-| `Technology` | VARCHAR(150) | - | Nombre de la tecnología o área tecnológica. |
+| `Technology_Key` | INT | PK | Surrogate key for the technology. |
+| `Technology` | VARCHAR(150) | - | Name of the technology or technical area. |
 
-Los valores de tecnología se deduplican antes de generar las claves sustitutas. 
-De esta manera, cada tecnología aparece una sola vez en la dimensión.
+Technology values are deduplicated before surrogate keys are generated. This ensures that each technology appears only once in the dimension.
 
-Esta dimensión permite responder principalmente a:
+This dimension primarily supports:
 
 - **R2 - Technology Analysis**
-- **R5 - Technology–Assessment Analysis**
+- **R5 - Technology-Assessment Analysis**
 
 ---
 
 ### 10.3 Dim_Profile
 
-La dimensión `Dim_Profile` contiene el nivel de seniority asociado a cada aplicación.
+The `Dim_Profile` dimension contains the seniority level associated with each application.
 
-Su objetivo es proporcionar el contexto necesario para analizar los resultados de 
-contratación según el perfil profesional del candidato.
+Its purpose is to provide the necessary context to analyze hiring outcomes according to the candidate's professional profile.
 
-| Campo | Tipo | Clave | Descripción |
+| Field | Type | Key | Description |
 |---|---|---|---|
-| `Profile_Key` | INT | PK | Clave sustituta del perfil. |
-| `Seniority` | VARCHAR(50) | - | Nivel de seniority del candidato. |
+| `Profile_Key` | INT | PK | Surrogate key for the profile. |
+| `Seniority` | VARCHAR(50) | - | Candidate's seniority level. |
 
-Los valores de `Seniority` se deduplican antes de generar las claves sustitutas.
+Seniority values are deduplicated before surrogate keys are generated.
 
-Esta dimensión permite responder principalmente al requerimiento:
+This dimension primarily supports:
 
 - **R3 - Candidate Profile Analysis**
 
-Los años de experiencia (`YOE`) no se almacenan en esta dimensión. Se mantienen en 
-`Fact_Application` debido a que representan un valor numérico de cada aplicación y 
-pueden utilizarse para calcular promedios, rangos y tasas de contratación.
+Years of experience (`YOE`) are not stored in this dimension. They remain in `Fact_Application` because they represent a numeric value for each application and can be used to calculate averages, ranges, and hiring rates.
 
 ---
 
 ### 10.4 Fact_Application
 
-`Fact_Application` es la tabla central del modelo dimensional. Cada fila representa 
-una aplicación individual, de acuerdo con la granularidad definida anteriormente.
+`Fact_Application` is the central table of the dimensional model. Each row represents an individual application, according to the previously defined grain.
 
-Contiene las claves que relacionan cada aplicación con las dimensiones y los valores 
-cuantitativos necesarios para realizar los análisis.
+It contains the keys that relate each application to the dimensions and the quantitative values required to perform the analyses.
 
-| Campo | Tipo | Clave | Descripción |
+| Field | Type | Key | Description |
 |---|---|---|---|
-| `Application_Key` | INT | PK | Clave sustituta única de la aplicación. |
-| `Date_Key` | INT | FK | Referencia a `Dim_Date`. |
-| `Technology_Key` | INT | FK | Referencia a `Dim_Technology`. |
-| `Profile_Key` | INT | FK | Referencia a `Dim_Profile`. |
-| `YOE` | INT | - | Años de experiencia profesional. |
-| `Code_Challenge_Score` | INT | - | Puntuación obtenida en Code Challenge. |
-| `Technical_Interview_Score` | INT | - | Puntuación obtenida en Technical Interview. |
-| `Hiring_Outcome` | TINYINT | - | Indicador del resultado de contratación: `1 = HIRED`, `0 = NOT HIRED`. |
+| `Application_Key` | INT | PK | Unique surrogate key for the application. |
+| `Date_Key` | INT | FK | Reference to `Dim_Date`. |
+| `Technology_Key` | INT | FK | Reference to `Dim_Technology`. |
+| `Profile_Key` | INT | FK | Reference to `Dim_Profile`. |
+| `YOE` | INT | - | Years of professional experience. |
+| `Code_Challenge_Score` | INT | - | Score obtained in the Code Challenge. |
+| `Technical_Interview_Score` | INT | - | Score obtained in the Technical Interview. |
+| `Hiring_Outcome` | TINYINT | - | Hiring outcome indicator: `1 = HIRED`, `0 = NOT HIRED`. |
 
-La tabla conserva tanto las aplicaciones contratadas como las no contratadas. Esto es 
-necesario porque varios requerimientos requieren comparar ambos grupos.
+The table preserves both hired and non-hired applications. This is necessary because several requirements require comparisons between both groups.
 
-Por ejemplo, el requerimiento **R4** necesita comparar el promedio de las evaluaciones 
-técnicas entre candidatos contratados y no contratados. Si las aplicaciones no 
-contratadas fueran eliminadas durante el proceso ETL, este análisis no sería posible.
+For example, requirement **R4** requires comparing the average technical assessment scores between hired and non-hired candidates. If non-hired applications were removed during the ETL process, this analysis would not be possible.
 
-Por esta razón, `Hiring_Outcome` funciona como un indicador analítico que permite 
-calcular:
+For this reason, `Hiring_Outcome` functions as an analytical indicator that allows the calculation of:
 
-- Total de aplicaciones.
-- Total de aplicaciones contratadas.
-- Total de aplicaciones no contratadas.
-- Tasa de contratación.
-- Promedios de las evaluaciones técnicas.
-- Diferencias entre candidatos contratados y no contratados.
+- Total applications.
+- Total hired applications.
+- Total non-hired applications.
+- Hiring rate.
+- Average technical assessment scores.
+- Differences between hired and non-hired candidates.
